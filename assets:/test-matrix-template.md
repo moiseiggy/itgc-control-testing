@@ -1,347 +1,209 @@
-ITGC Test Matrix Templates
-This document provides standardized matrix structures for recurring sample-based ITGC testing.
-Claude should select and adapt the appropriate matrix based on control type and objective.
-All matrices must:
-Clearly state objective
+# ITGC Test Matrix Templates
 
+> Standardized matrix structures for recurring sample-based ITGC testing.
+>
+> Claude selects and adapts the appropriate matrix based on control type
+> and objective. All matrices are Excel-copy friendly (pipe-delimited).
 
-Identify population source
+---
 
+## Matrix Index
 
-Identify attributes tested
+| # | Matrix | Use For |
+|---|---|---|
+| 1 | General Sample-Based Control Test | Data interfaces · Monitoring · Allocation · Routing · Control execution |
+| 2 | Completeness & Accuracy Tie-Out | Pre/post files · Batch loads · Snowflake ingestion · PFC batch |
+| 3 | Access Review Sampling | AD · Snowflake · Oracle · ServiceNow · DynamoDB · Mainframe |
+| 4 | Change Monitoring / Git Validation | Git blame · Code changes · SAFE samples · Deployment verification |
+| 5 | Allocation Logic Testing | Payment allocation · Interest/principal · Tolerance rules · MEA/MPE |
+| 6 | Routing Logic / Approval Grid Validation | Approval routing · Attribute-based decision engines |
+| 7 | Monitoring & Alert Testing | Failure detection · Alert configuration · Escalation validation |
+| 8 | Population Completeness (Raw-to-Review) | Raw dataset inclusion in review workbook |
+| 9 | Light-Touch C&A Reperformance | Independent recalculation · Attribute spot-check |
 
+---
 
-Separate completeness vs accuracy where applicable
+## Matrix Design Rules
 
+Claude must always:
 
-Avoid vague conclusions
+- Keep tables Excel-friendly (pipe-delimited)
+- Avoid merged cells
+- Avoid narrative inside tables
+- Keep conclusions concise
+- Not overstate assurance
+- Separate completeness and accuracy when applicable
+- Tie conclusions to evidence inspected
 
+**When evidence is partial:** Build the matrix skeleton, identify gaps
+clearly, flag missing evidence fields, and never fabricate counts.
 
-Be Excel-copy friendly (pipe-delimited tables)
+---
 
+## 1. General Sample-Based Control Test Matrix
 
+**Use for:** Data interface testing · Monitoring validation · Allocation
+validation · Routing logic testing · Control execution samples
 
-1️⃣ General Sample-Based Control Test Matrix
-Use for:
-Data interface testing
+**Control Objective:** [State objective clearly]
 
+**Population Source:** [System / Query / Report Name]
 
-Monitoring validation
+**Sample Selection Method:** [Random / Risk-based / Specific scenario / Test of one / Threshold-based]
 
+### Test Matrix
 
-Allocation validation
+| Sample ID | Key Attributes Tested | Expected Result | Evidence Inspected | Result (Pass/Fail) | Tester Conclusion |
+|---|---|---|---|---|---|
+| S1 | [List attributes] | [Expected behavior] | [Logs / Query / Screenshot] | | |
+| S2 | | | | | |
+| S3 | | | | | |
 
+---
 
-Routing logic testing
+## 2. Completeness & Accuracy Tie-Out Matrix
 
+**Use for:** Pre-job vs. post-job files · Raw → Staging → Final · Batch
+file → System load · Snowflake ingestion · PFC batch completeness
 
-Control execution samples
+**Control Objective:** Ensure complete and accurate transfer of data
+from [Source] to [Target].
 
+### Record Count Reconciliation
 
+| Stage | Record Count | Source of Evidence | Variance | Explanation | Conclusion |
+|---|---|---|---|---|---|
+| Raw Source | | | | | |
+| Staging | | | | | |
+| Final Output | | | | | |
 
-Control Objective:
-[State objective clearly]
-Population Source:
-[System / Query / Report Name]
-Sample Selection Method:
-[Random / Risk-based / Specific scenario / Test of one / Threshold-based]
+### KDE Attribute Validation
 
-Test Matrix
-Sample ID
-Key Attributes Tested
-Expected Result
-Evidence Inspected
-Result (Pass/Fail)
-Tester Conclusion
-S1
-[List attributes]
-[Expected behavior]
-[Logs / Query / Screenshot]
-Pass
-[Concise outcome]
-S2
+| Sample ID | KDE 1 | KDE 2 | KDE 3 | Source Value | Target Value | Match (Y/N) | Notes |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
 
+---
 
+## 3. Access Review Sampling Matrix
 
+**Use for:** AD · Snowflake · Oracle · ServiceNow · DynamoDB · Mainframe · Windows Server
 
+**Control Objective:** Validate completeness and accuracy of user access review.
 
+### Population Validation
 
+| Step | Population Count | Source | Reviewed Count | Match (Y/N) | Notes |
+|---|---|---|---|---|---|
+| | | | | | |
 
+### Sample Testing
 
+| User ID | Role / Permission | Reviewer Decision | Evidence of Review | Terminated? | Appropriate Access? | Conclusion |
+|---|---|---|---|---|---|---|
+| | | | | | | |
 
+---
 
+## 4. Change Monitoring / Git Validation Matrix
 
+**Use for:** Git blame validation · Code change monitoring · SAFE change
+samples · Deployment verification
 
-2️⃣ Completeness & Accuracy Tie-Out Matrix
-Use when validating:
-Pre-job vs Post-job files
+**Control Objective:** Validate that unauthorized changes did not occur
+during FY[XX].
 
+### Version Validation
 
-Raw → Staging → Final
+| File / Component | Last Modified Date | Modified By | In Scope Period? | Evidence Source | Conclusion |
+|---|---|---|---|---|---|
+| | | | | | |
 
+### Deployment Validation *(if applicable)*
 
-Batch file → System load
+| Change ID | Change Date | Approval Evidence | Deployment Evidence | Post-Implementation Validation | Conclusion |
+|---|---|---|---|---|---|
+| | | | | | |
 
+---
 
-Snowflake ingestion
+## 5. Allocation Logic Testing Matrix
+*(FS-006 Style)*
 
+**Use for:** Payment allocation · Interest vs. principal logic · $10
+tolerance rule · MEA / MPE aggregation · Transaction ordering
 
-PFC batch completeness
+**Control Objective:** Validate allocation logic processes transactions
+according to documented business rules.
 
+### Allocation Sequence Validation
 
+| Sample ID | Transaction Type | Input Amount | Allocation Sequence Expected | Allocation Observed | Variance | Conclusion |
+|---|---|---|---|---|---|---|
+| | | | | | | |
 
-Control Objective:
-Ensure complete and accurate transfer of data from [Source] to [Target]
+### Tolerance Validation *(if applicable)*
 
-Record Count Reconciliation
-Stage
-Record Count
-Source of Evidence
-Variance
-Explanation
-Conclusion
-Raw Source
+| Sample ID | Payment Amount | Tolerance Threshold | Expected Behavior | Observed Behavior | Conclusion |
+|---|---|---|---|---|---|
+| | | | | | |
 
+---
 
+## 6. Routing Logic / Approval Grid Validation Matrix
+*(COMM-064 / COMM-099 Style)*
 
+**Control Objective:** Validate approval routing logic functions based
+on defined attributes.
 
+### Routing Validation
 
+| Sample ID | Risk Rating | Exposure | LGD | Product Type | Grid Expected | Grid Observed | Match (Y/N) | Conclusion |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
 
+---
 
+## 7. Monitoring & Alert Testing Matrix
 
+**Control Objective:** Validate monitoring alerts trigger on failure conditions.
 
+### Alert Validation
 
-Staging
+| Job Name | Failure Simulated? | Alert Triggered? | Alert Timestamp | Escalation Evidence | Resolution Evidence | Conclusion |
+|---|---|---|---|---|---|---|
+| | | | | | | |
 
+---
 
+## 8. Population Completeness Matrix
+*(Raw-to-Review VLOOKUP)*
 
+**Use for:** Validating raw dataset inclusion in review workbook.
 
+### Population Inclusion Validation
 
+| Raw Record ID | Present in Review? (Y/N) | Exception? | Explanation | Conclusion |
+|---|---|---|---|---|
+| | | | | |
 
+---
 
+## 9. Light-Touch C&A Reperformance Matrix
 
+### Independent Reperformance
 
+| Step | Source Count | Recalculated Count | Match (Y/N) | Notes |
+|---|---|---|---|---|
+| | | | | |
 
-Final Output
+### Key Attribute Validation
 
+| Record ID | Attribute | Source Value | Final Value | Match (Y/N) |
+|---|---|---|---|---|
+| | | | | |
 
+---
 
-
-
-
-
-
-
-
-
-
-KDE Attribute Validation
-Sample ID
-KDE 1
-KDE 2
-KDE 3
-Source Value
-Target Value
-Match (Y/N)
-Notes
-
-
-3️⃣ Access Review Sampling Matrix
-Use for:
-AD
-
-
-Snowflake
-
-
-Oracle
-
-
-ServiceNow
-
-
-DynamoDB
-
-
-Mainframe
-
-
-Windows Server
-
-
-
-Control Objective:
-Validate completeness and accuracy of user access review.
-
-Population Validation
-Step
-Population Count
-Source
-Reviewed Count
-Match (Y/N)
-Notes
-
-
-Sample Testing
-User ID
-Role / Permission
-Reviewer Decision
-Evidence of Review
-Terminated?
-Appropriate Access?
-Conclusion
-
-
-4️⃣ Change Monitoring / Git Validation Matrix
-Use for:
-Git blame validation
-
-
-Code change monitoring
-
-
-SAFE change samples
-
-
-Deployment verification
-
-
-
-Control Objective:
-Validate that unauthorized changes did not occur during FYXX.
-
-File / Component
-Last Modified Date
-Modified By
-In Scope Period?
-Evidence Source
-Conclusion
-
-
-If validating deployment:
-Change ID
-Change Date
-Approval Evidence
-Deployment Evidence
-Post-Implementation Validation
-Conclusion
-
-
-5️⃣ Allocation Logic Testing Matrix (FS-006 Style)
-Use for:
-Payment allocation
-
-
-Interest vs principal logic
-
-
-$10 tolerance rule
-
-
-MEA / MPE aggregation
-
-
-Transaction ordering
-
-
-
-Control Objective:
-Validate allocation logic processes transactions according to documented business rules.
-
-Sample ID
-Transaction Type
-Input Amount
-Allocation Sequence Expected
-Allocation Observed
-Variance
-Conclusion
-
-If tolerance-based:
-Sample ID
-Payment Amount
-Tolerance Threshold
-Expected Behavior
-Observed Behavior
-Conclusion
-
-
-6️⃣ Routing Logic / Approval Grid Validation Matrix (COMM-064 / 099 Style)
-
-Control Objective:
-Validate approval routing logic functions based on defined attributes.
-
-Sample ID
-Risk Rating
-Exposure
-LGD
-Product Type
-Grid Expected
-Grid Observed
-Match (Y/N)
-Conclusion
-
-
-7️⃣ Monitoring & Alert Testing Matrix
-
-Control Objective:
-Validate monitoring alerts trigger on failure conditions.
-
-Job Name
-Failure Simulated?
-Alert Triggered?
-Alert Timestamp
-Escalation Evidence
-Resolution Evidence
-Conclusion
-
-
-8️⃣ Population Completeness (Raw to Review VLOOKUP) Matrix
-Use when validating raw dataset inclusion in review workbook.
-
-Raw Record ID
-Present in Review? (Y/N)
-Exception?
-Explanation
-Conclusion
-
-
-9️⃣ Light-Touch C&A Reperformance Matrix
-
-Independent Reperformance
-Step
-Source Count
-Recalculated Count
-Match (Y/N)
-Notes
-
-
-Key Attribute Validation
-Record ID
-Attribute
-Source Value
-Final Value
-Match (Y/N)
-
-
-Matrix Design Rules
-Claude must:
-Keep tables Excel-friendly (pipe-delimited).
-
-
-Avoid merged cells.
-
-
-Avoid narrative inside tables.
-
-
-Keep conclusions concise.
-
-
-Not overstate assurance.
-
-
-Separate completeness and accuracy when applicable.
-
-
-Tie conclusions to evidence.
-
+*These templates provide documentation structure for ITGC and SOX testing
+workflows. They do not replace professional judgment or formal audit standards.*
