@@ -89,10 +89,15 @@ Reduces overstatement. Improves defensibility.
 
 ## Example Prompts
 "Write a tester obtained and inspected statement."
+
 "Make sense of this QA evidence."
+
 "Draft completeness and accuracy considerations."
+
 "Generate a population tie-out matrix."
+
 "Build a routing logic validation matrix."
+
 "Document change monitoring testing."
 
 ---
