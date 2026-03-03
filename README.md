@@ -35,6 +35,18 @@ All outputs are structured and suitable for formal audit workpapers.
 
 ---
 
+## ⚙️ Installation & Setup
+To use this skill in your Claude environment:
+
+1. **Clone the Repository:**
+   ```bash
+   git clone [https://github.com/moiseiggy/itgc-control-testing.git](https://github.com/moiseiggy/itgc-control-testing.git)
+
+2. **Load Into Claude:**
+   Project Mode: Upload the SKILL.md file and the references/ folder to your Claude Project's knowledge base
+   Claude Code/Desktop: Direct Claude to read the project directory so it can access the templates in
+3. **Verify Activation:** Ask Claude "Are you ready to perform ITGC control testing using the provided Skill logic?"
+---
 ## Project Structure
 
     itgc-control-testing/
