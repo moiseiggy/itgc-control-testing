@@ -1,237 +1,148 @@
-Completeness vs Accuracy Cheat Sheet
-This document guides how to assess, document, and separate completeness and accuracy considerations in ITGC and data interface controls.
-Claude must ALWAYS evaluate whether completeness, accuracy, or both apply.
+# Completeness vs. Accuracy Cheat Sheet
 
-1️⃣ Core Definitions
-Completeness
-Are all required records included?
-Focus on:
-Record counts
+> A structured guide for assessing, documenting, and separating completeness
+> and accuracy considerations across ITGC and data interface controls.
+>
+> Claude must ALWAYS evaluate whether completeness, accuracy, or both apply.
 
+---
 
-Missing records
+## 1. Core Definitions
 
+| Dimension | Question | Focus Areas |
+|---|---|---|
+| **Completeness** | Are all required records included? | Record counts · Missing records · File arrival · Filtering logic · Upstream exclusions |
+| **Accuracy** | Are the records correct? | Field-level correctness · Transformation logic · Aggregation logic · Allocation sequencing · Attribute mapping |
 
-File arrival
+---
 
+## 2. Quick Decision Framework
 
-Filtering logic
+| Scenario | What Applies |
+|---|---|
+| Data moving between systems? | Completeness + Accuracy required |
+| Access review? | Completeness of population + Accuracy of entitlements |
+| Routing logic? | Accuracy (attribute-based) · Completeness usually less relevant |
+| Monitoring? | Accuracy of trigger logic · Not data completeness |
+| Change monitoring? | Accuracy of version validation · Not record completeness |
 
+---
 
-Upstream exclusions
+## 3. Common Evidence Types
 
+### Completeness Evidence
+- Raw source record counts
+- Batch logs
+- Pre-job vs. post-job counts
+- File arrival confirmations
+- Staging vs. final table comparison
+- Reconciliation reports
+- Ingestion logs
+- DLQ monitoring
 
+### Accuracy Evidence
+- KDE value comparison
+- Code logic inspection
+- SQL transformation scripts
+- Allocation ordering validation
+- Attribute mapping tables
+- Before / after field comparison
+- Reviewer sign-offs
+- Pivot table aggregations
 
-Accuracy
-Are the records correct?
-Focus on:
-Field-level correctness
+---
 
+## 4. When Completeness Evidence Is Weak
 
-Transformation logic
+If direct source counts are unavailable, rely on:
 
+- Downstream reconciliation controls
+- Monitoring alerts
+- Exception reports
+- Audit trail logs
 
-Aggregation logic
+| Instead of... | Use... |
+|---|---|
+| "Completeness ensured" | "Completeness risk reasonably mitigated through..." |
 
+---
 
-Allocation sequencing
+## 5. When Accuracy Evidence Is Weak
 
+### Red Flags
+- Manual Excel manipulation
+- No transformation documentation
+- Reviewer summary only (no raw file)
+- No field-level comparison
 
-Attribute mapping
+### Mitigation Approach
+- Perform independent recalculation
+- Inspect code directly
+- Reperform tie-out
+- Perform a targeted sample
 
+---
 
+## 6. Separation Language Guide
 
-2️⃣ Quick Decision Framework
-Ask:
-Is data moving between systems?
- → Completeness + Accuracy required
-
-
-Is this an access review?
- → Completeness of population + Accuracy of entitlements
-
-
-Is this routing logic?
- → Accuracy (attribute-based logic), completeness usually less relevant
-
-
-Is this monitoring?
- → Accuracy of trigger logic (not data completeness)
-
-
-Is this change monitoring?
- → Accuracy of version validation (not record completeness)
-
-
-
-3️⃣ Common Completeness Evidence
-Raw source record counts
-
-
-Batch logs
-
-
-Pre-job vs post-job counts
-
-
-File arrival confirmations
-
-
-Staging vs final table comparison
-
-
-Reconciliation reports
-
-
-Ingestion logs
-
-
-DLQ monitoring
-
-
-
-4️⃣ Common Accuracy Evidence
-KDE value comparison
-
-
-Code logic inspection
-
-
-SQL transformation scripts
-
-
-Allocation ordering validation
-
-
-Attribute mapping tables
-
-
-Before/after field comparison
-
-
-Reviewer sign-offs
-
-
-Pivot table aggregations
-
-
-
-5️⃣ When Completeness Is Weak
-If direct source counts unavailable:
-You must rely on:
-Downstream reconciliation controls
-
-
-Monitoring alerts
-
-
-Exception reports
-
-
-Audit trail logs
-
-
-Never state:
-“Completeness ensured”
-Instead state:
-“Completeness risk reasonably mitigated through…”
-
-6️⃣ When Accuracy Is Weak
-Red flags:
-Manual Excel manipulation
-
-
-No transformation documentation
-
-
-Reviewer summary only (no raw file)
-
-
-No field-level comparison
-
-
-Mitigation approach:
-Perform independent recalculation
-
-
-Inspect code
-
-
-Reperform tie-out
-
-
-Perform targeted sample
-
-
-
-7️⃣ Separation Language Guide
-Incorrect:
+**Incorrect:**
+```
 The tester determined the data is complete and accurate.
-Correct:
-The tester determined that record counts reconciled between source and target (completeness).
- The tester further determined that sampled key data elements agreed between systems (accuracy).
+```
 
-8️⃣ Common Audit Pitfalls
-Assuming no variance = completeness
+**Correct:**
+```
+The tester determined that record counts reconciled between source and
+target (completeness). The tester further determined that sampled key
+data elements agreed between systems (accuracy).
+```
 
+Always document completeness and accuracy as separate, distinct conclusions.
 
-Confusing monitoring with completeness
+---
 
+## 7. When Both Apply — High-Risk Controls
 
-Ignoring upstream filtering
+Both dimensions are required for:
 
+- Payment allocation
+- Exposure aggregation
+- Approval routing
+- Master file generation
+- Data warehouse ingestion
 
-Assuming lift-and-shift means no logic change
+### Required Steps
 
+- [ ] Reconcile counts (completeness)
+- [ ] Validate field-level values (accuracy)
+- [ ] Inspect logic (processing integrity)
 
-Treating reviewer sign-off as accuracy proof
+---
 
+## 8. Common Audit Pitfalls
 
+| Pitfall | Why It's a Problem |
+|---|---|
+| Assuming no variance = completeness | Absence of exception does not confirm all records arrived |
+| Confusing monitoring with completeness | Monitoring detects failures — it does not confirm record inclusion |
+| Ignoring upstream filtering | Records may be excluded before reaching the tested output |
+| Assuming lift-and-shift = no logic change | Migration can introduce unintended rounding or filtering behavior |
+| Treating reviewer sign-off as accuracy proof | Sign-off confirms review occurred — not that fields are correct |
 
-9️⃣ When Both Apply (High-Risk Controls)
-Examples:
-Payment allocation
+---
 
+## 9. Escalation Indicators
 
-Exposure aggregation
+Escalate if any of the following are present:
 
+- No source of record identified
+- Counts vary without explanation
+- Hard-coded filters observed
+- No monitoring tied to a failure condition
+- Reviewer reviewing their own access
+- Retroactive change approvals noted
 
-Approval routing
+---
 
-
-Master file generation
-
-
-Data warehouse ingestion
-
-
-You must:
-Reconcile counts (completeness)
-
-
-Validate field-level values (accuracy)
-
-
-Inspect logic (processing integrity)
-
-
-
-🔟 Escalation Indicators
-Escalate if:
-No source of record identified
-
-
-Counts vary without explanation
-
-
-Hard-coded filters observed
-
-
-No monitoring tied to failure condition
-
-
-Reviewer reviewing their own access
-
-
-Retroactive change approvals
-
+*This cheat sheet provides structured reasoning guidance for IT audit workflows.
+It does not replace professional judgment or formal audit standards.*
