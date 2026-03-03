@@ -56,6 +56,7 @@ To use this skill in your Claude environment:
     |-- assets/
     |   |-- tester-writeup-templates.md
     |   +-- test-matrix-template.md
+    |   +-- control-objective-mapper.md
     |
     +-- references/
         |-- completeness-accuracy-cheatsheet.md
