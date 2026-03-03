@@ -1,321 +1,193 @@
-Common Evidence Types in ITGC Testing
-This document helps Claude interpret what evidence is being reviewed and what it typically proves (or does NOT prove).
+# Common Evidence Types in ITGC Testing
+
+> A reference guide for interpreting what evidence proves — and what it
+> does NOT prove — before drawing audit conclusions.
+>
+> Claude must never assume evidence proves more than it actually demonstrates.
 
-1️⃣ SQL Query Output
-Usually proves:
-Data presence
+---
 
+## Evidence Index
+
+| # | Evidence Type | Key Limitation |
+|---|---|---|
+| 1 | SQL Query Output | Does not prove upstream completeness |
+| 2 | Code Snippet | Does not prove production deployment |
+| 3 | UI Screenshot | Does not prove backend logic or enforcement |
+| 4 | PagerDuty / Alert Screenshot | Does not prove all failure scenarios are covered |
+| 5 | Pivot Table / Aggregated Workbook | Does not prove raw data is complete or unfiltered |
+| 6 | Git Blame / Version History | Does not prove deployment to production |
+| 7 | Architecture Diagram | Does not prove operational effectiveness |
+| 8 | Batch Log / Job Log | Does not prove field-level accuracy |
+| 9 | Impact Analysis / SAFE Document | Does not prove testing or proper deployment |
+| 10 | Reviewer Sign-Off | Does not prove review was substantive |
 
-Field values
+---
+
+## 1. SQL Query Output
 
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Data presence | Upstream completeness |
+| Field values | Transformation logic (unless script reviewed) |
+| Record counts | That the query wasn't manually filtered |
 
-Record counts
+**Best Practices:**
+- Request the query text
+- Confirm no undocumented `WHERE` clause exclusions
+- Tie counts to the system of record
 
+---
 
-Does NOT prove:
-Upstream completeness
+## 2. Code Snippet
+*(Java · Go · Python · Lambda · SQL)*
 
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Processing logic | Code is deployed to production |
+| Conditional statements | Version hasn't changed |
+| Routing logic | Monitoring exists |
+| Allocation sequence | |
 
-Transformation logic unless script reviewed
+**Best Practices:**
+- Confirm environment (QA vs. Prod)
+- Inspect version history
+- Tie to change ticket if applicable
 
+---
 
-That query wasn’t manually filtered
+## 3. UI Screenshot
 
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Configuration setting | System-wide enforcement |
+| Status | Backend logic |
+| User entitlement | That alerts trigger properly |
+| Alert existence | |
 
-Best practice:
-Ask for query text
+**Best Practices:**
+- Pair with log evidence
+- Validate backend logic if control is critical
 
+---
 
-Confirm no WHERE clause exclusions unless documented
+## 4. PagerDuty / Alert Screenshot
 
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Alert is configured | Trigger logic covers all failure scenarios |
+| Alert triggered | Escalation was appropriate |
+| Alert resolved | Root cause was fixed |
 
-Tie counts to system-of-record
+**Best Practices:**
+- Request at least one triggered example
+- Inspect the escalation path
+- Validate service key alignment
 
+---
 
+## 5. Pivot Table / Aggregated Review Workbook
 
-2️⃣ Code Snippet (Java, Go, Python, Lambda, SQL)
-Usually proves:
-Processing logic
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Reviewer performed a review | Raw data is complete |
+| Aggregation was performed | No filtering occurred before the pivot |
+| | No hidden rows present |
 
+**Best Practices:**
+- Request the raw extract
+- Reperform the pivot independently
+- Perform a raw-to-review VLOOKUP
 
-Conditional statements
+---
 
+## 6. Git Blame / Version History
 
-Routing logic
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Last modified date | Code is deployed to production |
+| Author of change | Related files are unchanged |
+| | Configuration files are unchanged |
 
+**Best Practices:**
+- Confirm branch and environment
+- Confirm no changes during the in-scope period
+- Tie to release log
 
-Allocation sequence
+---
 
+## 7. Architecture Diagram
 
-Does NOT prove:
-Code deployed to prod
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Intended system design | Operational effectiveness |
+| System components | Implementation matches the diagram |
+| Logical data flow | Monitoring covers all data hops |
 
+**Best Practices:**
+- Validate with execution logs
+- Confirm actual job names against diagram
+- Confirm active vs. legacy component status
 
-That version hasn’t changed
+---
 
+## 8. Batch Log / Job Log
 
-That monitoring exists
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Job executed | Field-level accuracy |
+| Success / failure status | Upstream data was correct |
+| Record counts | Failure conditions are properly handled |
 
+**Best Practices:**
+- Inspect error handling logic
+- Confirm monitoring is active on job failure
+- Tie count to downstream table
 
-Best practice:
-Confirm environment (QA vs Prod)
+---
 
+## 9. Impact Analysis / SAFE Document
 
-Inspect version history
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Management documented change rationale | Testing was performed |
+| Risk evaluation occurred | Change was deployed properly |
+| | Code matches documentation |
 
+**Best Practices:**
+- Inspect test evidence directly
+- Confirm production deployment
+- Confirm reviewer approval date
 
-Tie to change ticket if applicable
+---
 
+## 10. Reviewer Sign-Off
 
+| What It Proves | What It Does NOT Prove |
+|---|---|
+| Review occurred | Review was substantive |
+| Reviewer acknowledged | Reviewer inspected raw data |
+| | Reviewer was independent |
 
-3️⃣ Screenshot of UI
-Usually proves:
-Configuration setting
+**Best Practices:**
+- Inspect reviewer notes
+- Confirm no self-review occurred
+- Confirm population tie-out was performed
 
+---
 
-Status
+## Final Rule for Claude
 
+| If evidence only proves... | Do NOT imply... |
+|---|---|
+| Configuration | Operational testing |
+| Logic | Completeness |
+| Monitoring | Accuracy |
+| Sign-off | Substantive review |
 
-User entitlement
+Always scope conclusions strictly to what was actually inspected.
 
+---
 
-Alert existence
-
-
-Does NOT prove:
-System-wide enforcement
-
-
-Backend logic
-
-
-That alert triggers properly
-
-
-Best practice:
-Pair with log evidence
-
-
-Validate backend logic if control critical
-
-
-
-4️⃣ PagerDuty / Alert Screenshot
-Usually proves:
-Alert configured
-
-
-Alert triggered
-
-
-Alert resolved
-
-
-Does NOT prove:
-Trigger logic covers all failure scenarios
-
-
-Escalation was appropriate
-
-
-Root cause fixed
-
-
-Best practice:
-Request one triggered example
-
-
-Inspect escalation path
-
-
-Validate service key alignment
-
-
-
-5️⃣ Pivot Table / Aggregated Review Workbook
-Usually proves:
-Reviewer performed review
-
-
-Aggregation performed
-
-
-Does NOT prove:
-Raw data complete
-
-
-No filtering before pivot
-
-
-No hidden rows
-
-
-Best practice:
-Request raw extract
-
-
-Reperform pivot independently
-
-
-Perform raw-to-review VLOOKUP
-
-
-
-6️⃣ Git Blame / Version History
-Usually proves:
-Last modified date
-
-
-Author of change
-
-
-Does NOT prove:
-Deployed to production
-
-
-That related files unchanged
-
-
-That configuration files unchanged
-
-
-Best practice:
-Confirm branch/environment
-
-
-Confirm no changes in FY period
-
-
-Tie to release log
-
-
-
-7️⃣ Architecture Diagram
-Usually proves:
-Intended design
-
-
-System components
-
-
-Data flow logic
-
-
-Does NOT prove:
-Operational effectiveness
-
-
-That implementation matches diagram
-
-
-That monitoring covers all hops
-
-
-Best practice:
-Validate with logs
-
-
-Confirm actual job names
-
-
-Confirm active vs legacy components
-
-
-
-8️⃣ Batch Log / Job Log
-Usually proves:
-Job ran
-
-
-Success/failure status
-
-
-Record counts
-
-
-Does NOT prove:
-Field-level accuracy
-
-
-That upstream data was correct
-
-
-That failure conditions properly handled
-
-
-Best practice:
-Inspect error handling logic
-
-
-Confirm monitoring on job failure
-
-
-Tie count to downstream table
-
-
-
-9️⃣ Impact Analysis / SAFE Document
-Usually proves:
-Management documented change rationale
-
-
-Risk evaluation occurred
-
-
-Does NOT prove:
-Testing performed
-
-
-Change deployed properly
-
-
-Code matches documentation
-
-
-Best practice:
-Inspect test evidence
-
-
-Confirm production deployment
-
-
-Confirm reviewer approval date
-
-
-
-🔟 Reviewer Sign-Off
-Usually proves:
-Review occurred
-
-
-Reviewer acknowledged
-
-
-Does NOT prove:
-Review was substantive
-
-
-Reviewer inspected raw data
-
-
-Reviewer independent
-
-
-Best practice:
-Inspect review notes
-
-
-Confirm no self-review
-
-
-Confirm population tie-out
-
-
-
-Final Rule for Claude
-Never assume evidence proves more than it actually demonstrates.
-If evidence only proves configuration — do not imply operational testing.
-If evidence only proves logic — do not imply completeness.
-If evidence only proves monitoring — do not imply accuracy.
-Always scope conclusions to what was actually inspected.
-
+*This reference guide supports IT audit documentation workflows.
+It does not replace professional judgment or formal audit standards.*
